@@ -1,8 +1,11 @@
-package com.thesis.petshop.services;
+package com.thesis.petshop.services.user;
 
 
+import com.thesis.petshop.services.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -11,12 +14,14 @@ public class UserController {
     @Autowired
     private UserService service;
 
+    @GetMapping
+    public List<User> getUsers (@RequestParam String type) {
+        return service.getUsersByType(type);
+    }
+
     @PostMapping
-    public String saveUser(@RequestBody User user){
-        if (service.saveUser(user)) {
-            return "OK";
-        }
-        return "NOK";
+    public Response saveUser(@RequestBody User user){
+        return service.saveUser(user);
     }
 
     @PostMapping("/login")
@@ -27,23 +32,28 @@ public class UserController {
         return "NOK";
     }
 
+    @GetMapping("/forgot-password")
+    public Response sendForgotPasswordToEmail(@RequestParam String email) {
+        return service.sendForgotPasswordToEmail(email);
+    }
+
 //
 //    @PostMapping
-//    public User addProduct(@RequestBody User users){
+//    public Pets addProduct(@RequestBody Pets users){
 //        return service.saveProDucts(users);
 //    }
 //
 //    @GetMapping()
-//    public User findProductById(@PathVariable int id){
+//    public Pets findProductById(@PathVariable int id){
 //        return service.getProductById(id);
 //    }
 //    @GetMapping()
-//    public User findProductByName(@PathVariable String name){
+//    public Pets findProductByName(@PathVariable String name){
 //        return service.getProductByName(name);
 //    }
 //
 //    @PutMapping()
-//    public User updateProduct(@RequestBody User user){
+//    public Pets updateProduct(@RequestBody Pets user){
 //        return service.updateProduct(user);
 //    }
 //

@@ -1,5 +1,4 @@
-package com.thesis.petshop.services;
-
+package com.thesis.petshop.services.user;
 
 import javax.persistence.*;
 
@@ -23,6 +22,12 @@ public class User {
 
     @Column(name = "password")
     private String password;
+
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "type")
+    private String type;
 
     public User() { }
 
@@ -66,4 +71,19 @@ public class User {
         this.password = password;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 }
