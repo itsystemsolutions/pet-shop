@@ -65,4 +65,8 @@ public class UserService {
         return repository.findAllByType(type);
     }
 
+    public User getUserById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User is did not exists"));
+    }
 }

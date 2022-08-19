@@ -1,6 +1,5 @@
 package com.thesis.petshop.services.pets;
 
-import com.thesis.petshop.services.email.JavaMailSenderImpl;
 import com.thesis.petshop.services.utils.RandomService;
 import com.thesis.petshop.services.utils.Response;
 import com.thesis.petshop.services.utils.Status;

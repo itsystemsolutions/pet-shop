@@ -19,6 +19,11 @@ public class UserController {
         return service.getUsersByType(type);
     }
 
+    @GetMapping("/info")
+    public User getUserById (@RequestParam Long id) {
+        return service.getUserById(id);
+    }
+
     @PostMapping
     public Response saveUser(@RequestBody User user){
         return service.saveUser(user);
