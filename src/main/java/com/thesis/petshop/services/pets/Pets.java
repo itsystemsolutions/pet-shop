@@ -19,6 +19,9 @@ public class Pets {
     @Column( name = "pet_code")
     private String petCode;
 
+    @Column( name = "image_link")
+    private String imageLink;
+
     @Column(name = "name")
     private String name;
 
@@ -56,6 +59,14 @@ public class Pets {
 
     public void setPetCode(String petCode) {
         this.petCode = petCode;
+    }
+
+    public String getImageLink() {
+        return imageLink;
+    }
+
+    public void setImageLink(String imageLink) {
+        this.imageLink = imageLink;
     }
 
     public String getName() {
@@ -113,5 +124,4 @@ public class Pets {
     public void setStatus(String status) {
         this.status = status;
     }
-
 }

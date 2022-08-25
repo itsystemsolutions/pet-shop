@@ -1,9 +1,11 @@
 package com.thesis.petshop.services.pets;
 
+import com.thesis.petshop.services.utils.ImageUploadService;
 import com.thesis.petshop.services.utils.RandomService;
 import com.thesis.petshop.services.utils.Response;
 import com.thesis.petshop.services.utils.Status;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collections;
 import java.util.List;
@@ -14,20 +16,22 @@ public class PetsService {
 
     private final PetsRepository repository;
     private final RandomService randomService;
+    private final ImageUploadService imageUploadService;
 
-    public PetsService(PetsRepository repository, RandomService randomService) {
+    public PetsService(PetsRepository repository, RandomService randomService, ImageUploadService imageUploadService) {
         this.repository = repository;
         this.randomService = randomService;
+        this.imageUploadService = imageUploadService;
     }
 
-    public Response savePet(Pets pets) {
+    public String savePet(Pets pets) {
         final String petCode = randomService.generatePetCode();
 
         pets.setPetCode( petCode );
         pets.setStatus( Status.IN_HOUSE.name() );
 
         repository.save(pets);
-        return Response.success("your pet code is " + petCode);
+        return petCode;
     }
 
     public List<Pets> getPetByPetCode(String petCode) {
@@ -48,10 +52,24 @@ public class PetsService {
                 presentPet.setStatus(Status.ADOPTED.name());
 
                 repository.save(presentPet);
-                return Response.success("Pet is adopted with code " + petCode);
+                return Response.successMessage("Pet is adopted with code " + petCode);
             }
         }
 
         return Response.failed("Failed to Adopt pet #" + petCode);
     }
+
+    public void uploadImage(String code, MultipartFile file) {
+        repository.findByPetCode(code).ifPresent(pet -> {
+            String imageLink = imageUploadService.fileUpload(file, "pets\\" + code);
+
+            pet.setImageLink(imageLink);
+            repository.save(pet);
+        });
+    }
+
+    public String getPetNameByPetCode(String petCode) {
+        return repository.findByPetCode(petCode).get().getName();
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.thesis.petshop.services.user;
+package com.thesis.petshop.services.accounts;
 
 import javax.persistence.*;
 

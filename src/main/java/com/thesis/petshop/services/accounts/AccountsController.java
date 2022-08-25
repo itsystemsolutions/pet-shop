@@ -1,4 +1,4 @@
-package com.thesis.petshop.services.user;
+package com.thesis.petshop.services.accounts;
 
 
 import com.thesis.petshop.services.utils.Response;
@@ -9,10 +9,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/user")
-public class UserController {
+public class AccountsController {
 
     @Autowired
-    private UserService service;
+    private AccountsService service;
 
     @GetMapping
     public List<User> getUsers (@RequestParam String type) {
@@ -30,11 +30,8 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String loginUser(@RequestParam String username, @RequestParam String password) {
-        if (service.login(username, password)) {
-            return "OK";
-        }
-        return "NOK";
+    public Long loginUser(@RequestParam String username, @RequestParam String password) {
+        return service.login(username, password);
     }
 
     @GetMapping("/forgot-password")
@@ -44,22 +41,22 @@ public class UserController {
 
 //
 //    @PostMapping
-//    public Pets addProduct(@RequestBody Pets users){
-//        return service.saveProDucts(users);
+//    public AdoptForm addProduct(@RequestBody AdoptForm accounts){
+//        return service.saveProDucts(accounts);
 //    }
 //
 //    @GetMapping()
-//    public Pets findProductById(@PathVariable int id){
+//    public AdoptForm findProductById(@PathVariable int id){
 //        return service.getProductById(id);
 //    }
 //    @GetMapping()
-//    public Pets findProductByName(@PathVariable String name){
+//    public AdoptForm findProductByName(@PathVariable String name){
 //        return service.getProductByName(name);
 //    }
 //
 //    @PutMapping()
-//    public Pets updateProduct(@RequestBody Pets user){
-//        return service.updateProduct(user);
+//    public AdoptForm updateProduct(@RequestBody AdoptForm accounts){
+//        return service.updateProduct(accounts);
 //    }
 //
 //    @DeleteMapping()

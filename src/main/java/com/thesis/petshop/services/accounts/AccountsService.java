@@ -1,4 +1,4 @@
-package com.thesis.petshop.services.user;
+package com.thesis.petshop.services.accounts;
 
 import com.thesis.petshop.services.email.JavaMailSenderImpl;
 import com.thesis.petshop.services.utils.RandomService;
@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class AccountsService {
 
     private final UserRepository repository;
     private final JavaMailSenderImpl javaMailSender;
     private final RandomService randomService;
 
-    public UserService(UserRepository repository, JavaMailSenderImpl javaMailSender, RandomService randomService) {
+    public AccountsService(UserRepository repository, JavaMailSenderImpl javaMailSender, RandomService randomService) {
         this.repository = repository;
         this.javaMailSender = javaMailSender;
         this.randomService = randomService;
@@ -25,7 +25,7 @@ public class UserService {
         if (repository.findByEmail(user.getEmail()).isPresent()) {
             return Response.failed("existing email " + user.getEmail());
         }
-        Optional<User> optionalUser = Optional.ofNullable(repository.findByUsername(user.getUsername()));
+        Optional<User> optionalUser = repository.findByUsername(user.getUsername());
         if (optionalUser.isPresent()) {
             return Response.failed("existing username " + user.getUsername());
         }
@@ -34,13 +34,14 @@ public class UserService {
         return Response.ok();
     }
 
-    public boolean login(String username, String password) {
-        User user = repository.findByUsername(username);
+    public long login(String username, String password) {
+        Optional<User> user = repository.findByUsername(username);
 
-        if (password.equals(user.getPassword())) {
-            return true;
+        if (user.isPresent() && password.equals(user.get().getPassword())) {
+            return user.get().getId();
         }
-        return false;
+
+        return 0;
     }
 
     public Response sendForgotPasswordToEmail(String email) {

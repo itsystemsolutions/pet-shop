@@ -29,7 +29,7 @@ public class Response {
         return new Response("NOK", "Record did not exists");
     }
 
-    public static Response success(String message) {
+    public static Response successMessage(String message) {
         return new Response("OK","Process Success! " + message);
     }
 
