@@ -4,9 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thesis.petshop.services.accounts.AccountsService;
 import com.thesis.petshop.services.adopt_form.answer.FormAnswerService;
-import com.thesis.petshop.services.exceptions.ExistingException;
 import com.thesis.petshop.services.pets.PetsService;
-import com.thesis.petshop.services.schedules.Schedule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -100,15 +98,25 @@ public class AdoptFormService {
                 }).collect(Collectors.toList());
     }
 
-    public void approveFormOfUser(Long userId, String petCode) {
+    public void updateFormForPickup(Long userId, String petCode) {
         AdoptForm adoptForm = repository.findByPetCodeAndUserId(petCode, userId);
-        adoptForm.setStatus("APPROVED");
+        adoptForm.setStatus("FOR_PICKUP");
         repository.save(adoptForm);
+
+        petsService.updatePetForPickUpByPetCode(petCode);
     }
 
     public void denyFormOfUser(Long userId, String petCode) {
         AdoptForm adoptForm = repository.findByPetCodeAndUserId(petCode, userId);
         adoptForm.setStatus("DENIED");
         repository.save(adoptForm);
+    }
+
+    public void approveForm(Long userId, String petCode) {
+        AdoptForm adoptForm = repository.findByPetCodeAndUserId(petCode, userId);
+        adoptForm.setStatus("APPROVED");
+        repository.save(adoptForm);
+
+        petsService.updatePetForClaimed(petCode);
     }
 }

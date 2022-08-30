@@ -35,13 +35,28 @@ public class Schedule {
     @Column(name = "pet_code")
     private String petCode;
 
+    @Column(name = "type")
+    private String type;
+
     @Column(name = "zoomLink")
     private String zoomLink;
 
     @Column(name = "status")
     private String status;
 
+    @Column(name = "has_proof_payment")
+    private Boolean hasProofPayment;
+
     public Schedule() { }
+
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public Long getId() {
         return id;
@@ -113,5 +128,13 @@ public class Schedule {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Boolean getHasProofPayment() {
+        return hasProofPayment;
+    }
+
+    public void setHasProofPayment(Boolean hasProofPayment) {
+        this.hasProofPayment = hasProofPayment;
     }
 }

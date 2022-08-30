@@ -11,8 +11,17 @@ public class ScheduleDTO {
     private String petCode;
     private String zoomLink;
     private String status;
+    private Boolean hasProofPayment;
 
     public ScheduleDTO() { }
+
+    public Boolean getHasProofPayment() {
+        return hasProofPayment;
+    }
+
+    public void setHasProofPayment(Boolean hasProofPayment) {
+        this.hasProofPayment = hasProofPayment;
+    }
 
     public Long getId() {
         return id;

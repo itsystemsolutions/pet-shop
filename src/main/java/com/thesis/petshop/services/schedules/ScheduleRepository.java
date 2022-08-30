@@ -7,6 +7,8 @@ import java.util.Optional;
 
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
 
-    List<Schedule> findAllByStatus(String status);
+    List<Schedule> findAllByTypeAndStatus(String type, String status);
+
+    List<Schedule> findAllByType(String type);
 
 }

@@ -29,7 +29,51 @@ public class User {
     @Column(name = "type")
     private String type;
 
+    @Column(name = "age")
+    private String age;
+
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "occupation")
+    private String occupation;
+
+    @Column(name = "social")
+    private String social;
+
     public User() { }
+
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getOccupation() {
+        return occupation;
+    }
+
+    public void setOccupation(String occupation) {
+        this.occupation = occupation;
+    }
+
+    public String getSocial() {
+        return social;
+    }
+
+    public void setSocial(String social) {
+        this.social = social;
+    }
 
     public Long getId() {
         return id;

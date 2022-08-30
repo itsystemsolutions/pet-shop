@@ -2,7 +2,9 @@ package com.thesis.petshop.services.schedules;
 
 import com.thesis.petshop.services.accounts.AccountsService;
 import com.thesis.petshop.services.adopt_form.AdoptFormService;
+import com.thesis.petshop.services.utils.ImageUploadService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -13,51 +15,70 @@ import java.util.stream.Collectors;
 @Service
 public class ScheduleService {
 
+    private static final String WAITING = "WAITING";
+
+    private final ImageUploadService imageUploadService;
     private final ScheduleRepository repository;
     private final AccountsService accountsService;
     private final AdoptFormService adoptFormService;
 
-    public ScheduleService(ScheduleRepository repository, AccountsService accountsService, AdoptFormService adoptFormService) {
+    public ScheduleService(ImageUploadService imageUploadService, ScheduleRepository repository,
+                           AccountsService accountsService, AdoptFormService adoptFormService) {
+        this.imageUploadService = imageUploadService;
         this.repository = repository;
         this.accountsService = accountsService;
         this.adoptFormService = adoptFormService;
     }
 
-    public void save(Schedule schedule) {
-        schedule.setStatus("WAITING");
+    public void saveInterview(Schedule schedule) {
+        schedule.setType("INTERVIEW");
+        schedule.setHasProofPayment(false);
+        schedule.setStatus(WAITING);
+        repository.save(schedule);
+    }
+
+    public void savePickUp(Schedule schedule) {
+        schedule.setType("PICKUP");
+        schedule.setHasProofPayment(false);
+        schedule.setStatus(WAITING);
         repository.save(schedule);
     }
 
     public List<ScheduleDTO> getAppointments() {
-        return repository.findAllByStatus("WAITING").stream().map(entry -> {
-            ScheduleDTO dto = new ScheduleDTO();
+        return repository.findAllByType("INTERVIEW")
+                .stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
 
-            dto.setId( entry.getId() );
-            dto.setName( accountsService.getUserById(entry.getUserId()).getName() );
-            dto.setPetCode( entry.getPetCode() );
-            dto.setDate(entry.getDate() );
-            dto.setTime(convertTimeTo12HrFormat(entry.getTime()));
-            dto.setMessage(entry.getMessage());
-            dto.setZoomLink(entry.getZoomLink());
-
-            return dto;
-        }).collect(Collectors.toList());
+    public List<ScheduleDTO> getForPickUp() {
+        return repository.findAllByType("PICKUP")
+                .stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
     }
 
     public List<ScheduleDTO> getAll() {
-        return repository.findAll().stream().map(entry -> {
-            ScheduleDTO dto = new ScheduleDTO();
+        return repository.findAll().stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
 
-            dto.setId( entry.getId() );
-            dto.setName( accountsService.getUserById(entry.getUserId()).getName() );
-            dto.setPetCode( entry.getPetCode() );
-            dto.setDate(entry.getDate() );
-            dto.setTime(convertTimeTo12HrFormat(entry.getTime()));
-            dto.setMessage(entry.getMessage());
-            dto.setZoomLink(entry.getZoomLink());
+    private ScheduleDTO mapToDTO(Schedule entry) {
+        ScheduleDTO dto = new ScheduleDTO();
 
-            return dto;
-        }).collect(Collectors.toList());
+        dto.setId( entry.getId() );
+        dto.setUserId( entry.getUserId() );
+        dto.setName( accountsService.getUserById(entry.getUserId()).getName() );
+        dto.setPetCode( entry.getPetCode() );
+        dto.setDate(entry.getDate() );
+        dto.setTime(convertTimeTo12HrFormat(entry.getTime()));
+        dto.setMessage(entry.getMessage());
+        dto.setZoomLink(entry.getZoomLink());
+        dto.setHasProofPayment(entry.getHasProofPayment() != null && entry.getHasProofPayment());
+        dto.setStatus(entry.getStatus());
+
+        return dto;
     }
 
     private String convertTimeTo12HrFormat(String time) {
@@ -71,7 +92,7 @@ public class ScheduleService {
             Schedule existingSchedule = schedule.get();
 
             if (decision.equalsIgnoreCase("PASSED")) {
-                adoptFormService.approveFormOfUser(existingSchedule.getUserId(), existingSchedule.getPetCode());
+                adoptFormService.updateFormForPickup(existingSchedule.getUserId(), existingSchedule.getPetCode());
             } else {
                 adoptFormService.denyFormOfUser(existingSchedule.getUserId(), existingSchedule.getPetCode());
             }
@@ -79,5 +100,31 @@ public class ScheduleService {
             existingSchedule.setStatus(decision);
             repository.save(existingSchedule);
         }
+    }
+
+    public void updatePickUpAppointment(Long id, String decision) {
+        Optional<Schedule> schedule = repository.findById(id);
+
+        if (schedule.isPresent()) {
+            Schedule existingSchedule = schedule.get();
+
+            if (decision.equalsIgnoreCase("PASSED")) {
+                adoptFormService.approveForm(existingSchedule.getUserId(), existingSchedule.getPetCode());
+            } else {
+                adoptFormService.denyFormOfUser(existingSchedule.getUserId(), existingSchedule.getPetCode());
+            }
+
+            existingSchedule.setStatus(decision);
+            repository.save(existingSchedule);
+        }
+    }
+
+    public void uploadImage(Long id, MultipartFile file) {
+        repository.findById(id).ifPresent(schedule -> {
+            imageUploadService.fileUpload(file, "payment\\" + id);
+
+            schedule.setHasProofPayment( true );
+            repository.save(schedule);
+        });
     }
 }

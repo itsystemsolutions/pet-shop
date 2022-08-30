@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -22,12 +23,27 @@ public class ScheduleController {
 
     @PostMapping
     public void save(@RequestBody Schedule schedule){
-        service.save(schedule);
+        service.saveInterview(schedule);
+    }
+
+    @PostMapping("/pick-up")
+    public void pickupSave(@RequestBody Schedule schedule){
+        service.savePickUp(schedule);
+    }
+
+    @PutMapping("/upload/proof-payment")
+    public void uploadImage(@RequestParam Long id, @RequestParam("file") MultipartFile file){
+        service.uploadImage(id, file);
     }
 
     @GetMapping("/for-interview")
     public List<ScheduleDTO> getRequestList(){
         return service.getAppointments();
+    }
+
+    @GetMapping("/for-pick-up")
+    public List<ScheduleDTO> getForPickUp(){
+        return service.getForPickUp();
     }
 
     @GetMapping
@@ -38,6 +54,11 @@ public class ScheduleController {
     @PutMapping("/{id}")
     public void update(@PathVariable Long id, @RequestParam String decision){
         service.updateAppointment(id, decision);
+    }
+
+    @PutMapping("/pick-up/{id}")
+    public void pickup(@PathVariable Long id, @RequestParam String decision){
+        service.updatePickUpAppointment(id, decision);
     }
 
 }

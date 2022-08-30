@@ -1,9 +1,11 @@
 package com.thesis.petshop.services.accounts;
 
 import com.thesis.petshop.services.email.JavaMailSenderImpl;
+import com.thesis.petshop.services.utils.ImageUploadService;
 import com.thesis.petshop.services.utils.RandomService;
 import com.thesis.petshop.services.utils.Response;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,11 +13,13 @@ import java.util.Optional;
 @Service
 public class AccountsService {
 
+    private final ImageUploadService imageUploadService;
     private final UserRepository repository;
     private final JavaMailSenderImpl javaMailSender;
     private final RandomService randomService;
 
-    public AccountsService(UserRepository repository, JavaMailSenderImpl javaMailSender, RandomService randomService) {
+    public AccountsService(ImageUploadService imageUploadService, UserRepository repository, JavaMailSenderImpl javaMailSender, RandomService randomService) {
+        this.imageUploadService = imageUploadService;
         this.repository = repository;
         this.javaMailSender = javaMailSender;
         this.randomService = randomService;
@@ -69,5 +73,9 @@ public class AccountsService {
     public User getUserById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User is did not exists"));
+    }
+
+    public void uploadImage(String username, MultipartFile file) {
+        repository.findByUsername(username).ifPresent(pet -> imageUploadService.fileUpload(file, "valid-id\\" + username));
     }
 }

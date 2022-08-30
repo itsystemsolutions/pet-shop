@@ -40,7 +40,7 @@ public class PetsService {
             return Collections.singletonList(pets.orElse(null));
         }
 
-        return repository.findAll();
+        return repository.findAllByStatus("IN_HOUSE");
     }
 
     public Response adoptPetByPetCode(String petCode) {
@@ -72,4 +72,17 @@ public class PetsService {
         return repository.findByPetCode(petCode).get().getName();
     }
 
+    public void updatePetForPickUpByPetCode(String petCode) {
+        repository.findByPetCode(petCode).ifPresent(pet-> {
+            pet.setStatus("FOR_PICKUP");
+            repository.save(pet);
+        });
+    }
+
+    public void updatePetForClaimed(String petCode) {
+        repository.findByPetCode(petCode).ifPresent(pet-> {
+            pet.setStatus("CLAIMED");
+            repository.save(pet);
+        });
+    }
 }

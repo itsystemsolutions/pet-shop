@@ -4,6 +4,7 @@ package com.thesis.petshop.services.accounts;
 import com.thesis.petshop.services.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -37,6 +38,11 @@ public class AccountsController {
     @GetMapping("/forgot-password")
     public Response sendForgotPasswordToEmail(@RequestParam String email) {
         return service.sendForgotPasswordToEmail(email);
+    }
+
+    @PutMapping("/upload/image")
+    public void uploadImage(@RequestParam String username, @RequestParam("file") MultipartFile file){
+        service.uploadImage(username, file);
     }
 
 //
