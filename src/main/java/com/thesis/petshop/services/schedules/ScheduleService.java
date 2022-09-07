@@ -2,6 +2,7 @@ package com.thesis.petshop.services.schedules;
 
 import com.thesis.petshop.services.accounts.AccountsService;
 import com.thesis.petshop.services.adopt_form.AdoptFormService;
+import com.thesis.petshop.services.pets.PetsService;
 import com.thesis.petshop.services.utils.ImageUploadService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -9,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -34,6 +36,7 @@ public class ScheduleService {
         schedule.setType("INTERVIEW");
         schedule.setHasProofPayment(false);
         schedule.setStatus(WAITING);
+        schedule.setPetType( adoptFormService.getPetType(schedule.getPetCode()) );
         repository.save(schedule);
     }
 
@@ -44,14 +47,27 @@ public class ScheduleService {
         repository.save(schedule);
     }
 
-    public List<ScheduleDTO> getAppointments() {
+    public List<ScheduleDTO> getAppointments(Long userId) {
+        if (Objects.nonNull(userId)) {
+            return repository.findAllByTypeAndUserId("INTERVIEW", userId)
+                    .stream()
+                    .map(this::mapToDTO)
+                    .collect(Collectors.toList());
+        }
+
         return repository.findAllByType("INTERVIEW")
                 .stream()
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
     }
 
-    public List<ScheduleDTO> getForPickUp() {
+    public List<ScheduleDTO> getForPickUp(Long userId) {
+        if (Objects.nonNull(userId)) {
+            return repository.findAllByTypeAndUserId("PICKUP", userId)
+                    .stream()
+                    .map(this::mapToDTO)
+                    .collect(Collectors.toList());
+        }
         return repository.findAllByType("PICKUP")
                 .stream()
                 .map(this::mapToDTO)
@@ -77,6 +93,7 @@ public class ScheduleService {
         dto.setZoomLink(entry.getZoomLink());
         dto.setHasProofPayment(entry.getHasProofPayment() != null && entry.getHasProofPayment());
         dto.setStatus(entry.getStatus());
+        dto.setPetType(entry.getPetType());
 
         return dto;
     }

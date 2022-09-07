@@ -32,8 +32,14 @@ public class AdoptForm {
     @Column(name = "is_form_pass")
     private Boolean isFormPass;
 
+    @Column(name = "has_proof_ownership")
+    private Boolean hasProofOwnership;
+
     @Column(name = "pet_code")
     private String petCode;
+
+    @Column(name = "pet_type")
+    private String petType;
 
     @Column(name = "status")
     private String status;
@@ -113,5 +119,21 @@ public class AdoptForm {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getPetType() {
+        return petType;
+    }
+
+    public void setPetType(String petType) {
+        this.petType = petType;
+    }
+
+    public Boolean getHasProofOwnership() {
+        return hasProofOwnership;
+    }
+
+    public void setHasProofOwnership(Boolean hasProofOwnership) {
+        this.hasProofOwnership = hasProofOwnership;
     }
 }

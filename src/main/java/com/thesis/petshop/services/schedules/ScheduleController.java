@@ -37,13 +37,13 @@ public class ScheduleController {
     }
 
     @GetMapping("/for-interview")
-    public List<ScheduleDTO> getRequestList(){
-        return service.getAppointments();
+    public List<ScheduleDTO> getRequestList(@RequestParam(required = false) Long userId){
+        return service.getAppointments(userId);
     }
 
     @GetMapping("/for-pick-up")
-    public List<ScheduleDTO> getForPickUp(){
-        return service.getForPickUp();
+    public List<ScheduleDTO> getForPickUp(@RequestParam(required = false) Long userId){
+        return service.getForPickUp(userId);
     }
 
     @GetMapping

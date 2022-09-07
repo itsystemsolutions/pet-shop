@@ -35,6 +35,9 @@ public class Schedule {
     @Column(name = "pet_code")
     private String petCode;
 
+    @Column(name = "pet_type")
+    private String petType;
+
     @Column(name = "type")
     private String type;
 
@@ -136,5 +139,13 @@ public class Schedule {
 
     public void setHasProofPayment(Boolean hasProofPayment) {
         this.hasProofPayment = hasProofPayment;
+    }
+
+    public String getPetType() {
+        return petType;
+    }
+
+    public void setPetType(String petType) {
+        this.petType = petType;
     }
 }

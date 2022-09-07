@@ -1,56 +1,33 @@
 package com.thesis.petshop.services.accounts;
 
-import javax.persistence.*;
+import com.thesis.petshop.services.adopt_form.answer.FormAnswer;
 
-@Entity
-@Table(name ="user")
-public class User {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    @Column (name = "id")
+public class UserDTO {
+
     private Long id;
-
-    @Column( name = "name")
     private String name;
-
-    @Column(name = "mobile")
     private String mobile;
-
-    @Column(name = "username")
     private String username;
-
-    @Column(name = "password")
-    private String password;
-
-    @Column(name = "email")
     private String email;
-
-    @Column(name = "type")
     private String type;
-
-    @Column(name = "age")
     private String age;
-
-    @Column(name = "address")
     private String address;
-
-    @Column(name = "occupation")
     private String occupation;
-
-    @Column(name = "social")
     private String social;
 
-    @Column(name = "qualification_answers")
-    private String qualificationAnswers;
-
-    @Column(name = "qualification_form_score")
+    private FormAnswer qualificationAnswers;
     private Integer qualificationFormScore;
 
-    @Column(name = "is_user_valid")
     private Boolean isUserValid;
 
-    public User() { }
+    public UserDTO() { }
 
     public String getAge() {
         return age;
@@ -116,13 +93,6 @@ public class User {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     public String getEmail() {
         return email;
@@ -140,11 +110,11 @@ public class User {
         this.type = type;
     }
 
-    public String getQualificationAnswers() {
+    public FormAnswer getQualificationAnswers() {
         return qualificationAnswers;
     }
 
-    public void setQualificationAnswers(String qualificationAnswers) {
+    public void setQualificationAnswers(FormAnswer qualificationAnswers) {
         this.qualificationAnswers = qualificationAnswers;
     }
 

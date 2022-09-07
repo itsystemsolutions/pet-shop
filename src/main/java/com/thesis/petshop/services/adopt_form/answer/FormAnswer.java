@@ -23,6 +23,14 @@ public class FormAnswer {
     private String answer19;
     private String answer20;
 
+    private String q1OtherAnswer;
+    private String q3OtherAnswer;
+    private String q4OtherAnswer;
+    private String q5OtherAnswer;
+    private String q9OtherAnswer;
+    private String q11OtherAnswer;
+    private String q20OtherAnswer;
+
     public FormAnswer() { }
 
     public String getAnswer1() {
@@ -183,5 +191,61 @@ public class FormAnswer {
 
     public void setAnswer20(String answer20) {
         this.answer20 = answer20;
+    }
+
+    public String getQ1OtherAnswer() {
+        return q1OtherAnswer;
+    }
+
+    public void setQ1OtherAnswer(String q1OtherAnswer) {
+        this.q1OtherAnswer = q1OtherAnswer;
+    }
+
+    public String getQ3OtherAnswer() {
+        return q3OtherAnswer;
+    }
+
+    public void setQ3OtherAnswer(String q3OtherAnswer) {
+        this.q3OtherAnswer = q3OtherAnswer;
+    }
+
+    public String getQ4OtherAnswer() {
+        return q4OtherAnswer;
+    }
+
+    public void setQ4OtherAnswer(String q4OtherAnswer) {
+        this.q4OtherAnswer = q4OtherAnswer;
+    }
+
+    public String getQ5OtherAnswer() {
+        return q5OtherAnswer;
+    }
+
+    public void setQ5OtherAnswer(String q5OtherAnswer) {
+        this.q5OtherAnswer = q5OtherAnswer;
+    }
+
+    public String getQ9OtherAnswer() {
+        return q9OtherAnswer;
+    }
+
+    public void setQ9OtherAnswer(String q9OtherAnswer) {
+        this.q9OtherAnswer = q9OtherAnswer;
+    }
+
+    public String getQ11OtherAnswer() {
+        return q11OtherAnswer;
+    }
+
+    public void setQ11OtherAnswer(String q11OtherAnswer) {
+        this.q11OtherAnswer = q11OtherAnswer;
+    }
+
+    public String getQ20OtherAnswer() {
+        return q20OtherAnswer;
+    }
+
+    public void setQ20OtherAnswer(String q20OtherAnswer) {
+        this.q20OtherAnswer = q20OtherAnswer;
     }
 }

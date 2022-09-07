@@ -21,7 +21,7 @@ public class JavaMailSenderImpl {
         msg.setTo(email);
 
         msg.setSubject("PET SHOP FORGOT PASSWORD CODE");
-        msg.setText("Hello AdoptForm, \nYour new password is " + code + " please goto our system then type the code.");
+        msg.setText("Hello AdoptForm, \nYour new pass is " + code + " please goto our system then type the code.");
 
         javaMailSender.send(msg);
     }

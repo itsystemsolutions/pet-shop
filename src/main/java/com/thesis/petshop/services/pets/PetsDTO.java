@@ -1,58 +1,24 @@
 package com.thesis.petshop.services.pets;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.thesis.petshop.services.accounts.User;
 
-@Entity
-@Table(name ="pets")
-public class Pets {
+public class PetsDTO {
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    @Column (name = "id")
     private Long id;
-
-    @Column( name = "pet_code")
     private String petCode;
-
-    @Column(name = "name")
     private String name;
-
-    @Column(name = "gender")
     private String gender;
-
-    @Column(name = "breed")
     private String breed;
-
-    @Column(name = "age")
     private String age;
-
-    @Column(name = "size")
     private String size;
-
-    @Column(name = "shelter_resident_year")
     private String shelterResidentYear;
-
-    @Column(name = "status")
     private String status;
-
-    @Column(name = "description")
     private String description;
-
-    @Column(name = "last_seen")
     private String lastSeen;
-
-    @Column(name = "owner_id")
-    private Long ownerId;
-
-    @Column(name = "approval_status")
     private String approvalStatus;
+    private User user;
 
-    public Pets() { }
+    public PetsDTO() { }
 
     public Long getId() {
         return id;
@@ -142,19 +108,19 @@ public class Pets {
         this.lastSeen = lastSeen;
     }
 
-    public Long getOwnerId() {
-        return ownerId;
-    }
-
-    public void setOwnerId(Long ownerId) {
-        this.ownerId = ownerId;
-    }
-
     public String getApprovalStatus() {
         return approvalStatus;
     }
 
     public void setApprovalStatus(String approvalStatus) {
         this.approvalStatus = approvalStatus;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

@@ -1,10 +1,8 @@
 package com.thesis.petshop.services.adopt_form;
 
-import com.thesis.petshop.services.schedules.Schedule;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface AdoptFormRepository extends JpaRepository<AdoptForm, Long> {
 
@@ -14,4 +12,7 @@ public interface AdoptFormRepository extends JpaRepository<AdoptForm, Long> {
 
     List<AdoptForm> findAllByStatus(String forInterview);
 
+    List<AdoptForm> findAllByUserId(Long userId);
+
+    AdoptForm findByPetCode(String petCode);
 }

@@ -9,6 +9,7 @@ public class ScheduleDTO {
     private String time;
     private String message;
     private String petCode;
+    private String petType;
     private String zoomLink;
     private String status;
     private Boolean hasProofPayment;
@@ -93,5 +94,13 @@ public class ScheduleDTO {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getPetType() {
+        return petType;
+    }
+
+    public void setPetType(String petType) {
+        this.petType = petType;
     }
 }

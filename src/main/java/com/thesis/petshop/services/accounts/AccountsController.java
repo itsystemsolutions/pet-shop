@@ -1,8 +1,11 @@
 package com.thesis.petshop.services.accounts;
 
 
+import com.thesis.petshop.services.adopt_form.answer.FormAnswer;
 import com.thesis.petshop.services.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.relational.core.sql.In;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,13 +19,23 @@ public class AccountsController {
     private AccountsService service;
 
     @GetMapping
-    public List<User> getUsers (@RequestParam String type) {
+    public List<UserDTO> getUsers (@RequestParam String type) {
         return service.getUsersByType(type);
     }
 
     @GetMapping("/info")
     public User getUserById (@RequestParam Long id) {
         return service.getUserById(id);
+    }
+
+    @GetMapping("/data")
+    public User getAccountByUsername (@RequestParam String username) {
+        return service.getUserByUsername(username);
+    }
+
+    @PutMapping("/qualification-form")
+    public Integer updateUserQualificationForm (@RequestParam String username, @RequestBody FormAnswer formAnswer) {
+        return service.updateAccountWithFormAnswers(username, formAnswer);
     }
 
     @PostMapping
@@ -43,6 +56,12 @@ public class AccountsController {
     @PutMapping("/upload/image")
     public void uploadImage(@RequestParam String username, @RequestParam("file") MultipartFile file){
         service.uploadImage(username, file);
+    }
+
+    @PutMapping
+    public ResponseEntity<Object> uploadImage(@RequestBody User user){
+        service.updateUser(user);
+        return ResponseEntity.noContent().build();
     }
 
 //

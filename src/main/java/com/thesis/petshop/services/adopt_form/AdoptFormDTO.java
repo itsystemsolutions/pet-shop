@@ -13,6 +13,8 @@ public class AdoptFormDTO {
     private String petCode;
     private String petName;
     private String status;
+    private String type;
+    private Boolean hasProofOwnerShip;
 
     private int formScore;
     private String formResult;
@@ -106,5 +108,21 @@ public class AdoptFormDTO {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Boolean getHasProofOwnerShip() {
+        return hasProofOwnerShip;
+    }
+
+    public void setHasProofOwnerShip(Boolean hasProofOwnerShip) {
+        this.hasProofOwnerShip = hasProofOwnerShip;
     }
 }
