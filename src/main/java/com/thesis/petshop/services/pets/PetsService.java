@@ -75,6 +75,10 @@ public class PetsService {
         return repository.findByPetCode(petCode).get().getName();
     }
 
+    public Pets findByPetCode(String petCode) {
+        return repository.findByPetCode(petCode).get();
+    }
+
     public void updatePetForPickUpByPetCode(String petCode) {
         repository.findByPetCode(petCode).ifPresent(pet-> {
             pet.setStatus("FOR_PICKUP");
@@ -140,5 +144,9 @@ public class PetsService {
                 .stream()
                 .map(this::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    public void save(Pets pet) {
+        repository.save(pet);
     }
 }

@@ -1,6 +1,7 @@
 package com.thesis.petshop.services.accounts;
 
 
+import com.thesis.petshop.services.accounts.qualification.QualificationForm;
 import com.thesis.petshop.services.adopt_form.answer.FormAnswer;
 import com.thesis.petshop.services.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,11 @@ public class AccountsController {
         return service.sendForgotPasswordToEmail(email);
     }
 
+    @GetMapping("/verify-email")
+    public Response sendEmailVerification(@RequestParam String email, @RequestParam String otp) {
+        return service.verificationEmail(email, otp);
+    }
+
     @PutMapping("/upload/image")
     public void uploadImage(@RequestParam String username, @RequestParam("file") MultipartFile file){
         service.uploadImage(username, file);
@@ -64,6 +70,15 @@ public class AccountsController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/quiz-answer/{id}")
+    public ResponseEntity<Response> updateQuizForm(@PathVariable Long id, @RequestBody QualificationForm answer) {
+        return ResponseEntity.ok(service.addQualificationForm(id, answer));
+    }
+
+    @PutMapping("/valid/{id}")
+    public ResponseEntity<Response> updateQuizForm(@PathVariable Long id, @RequestParam String decision) {
+        return ResponseEntity.ok(service.updateUserToValid(id, decision));
+    }
 //
 //    @PostMapping
 //    public AdoptForm addProduct(@RequestBody AdoptForm accounts){

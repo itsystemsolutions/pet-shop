@@ -2,6 +2,7 @@ package com.thesis.petshop.services.schedules;
 
 import com.thesis.petshop.services.accounts.AccountsService;
 import com.thesis.petshop.services.adopt_form.AdoptFormService;
+import com.thesis.petshop.services.pets.Pets;
 import com.thesis.petshop.services.pets.PetsService;
 import com.thesis.petshop.services.utils.ImageUploadService;
 import org.springframework.stereotype.Service;
@@ -23,13 +24,16 @@ public class ScheduleService {
     private final ScheduleRepository repository;
     private final AccountsService accountsService;
     private final AdoptFormService adoptFormService;
+    private final PetsService petsService;
 
     public ScheduleService(ImageUploadService imageUploadService, ScheduleRepository repository,
-                           AccountsService accountsService, AdoptFormService adoptFormService) {
+                           AccountsService accountsService, AdoptFormService adoptFormService,
+                           PetsService petsService) {
         this.imageUploadService = imageUploadService;
         this.repository = repository;
         this.accountsService = accountsService;
         this.adoptFormService = adoptFormService;
+        this.petsService = petsService;
     }
 
     public void saveInterview(Schedule schedule) {
@@ -112,6 +116,9 @@ public class ScheduleService {
                 adoptFormService.updateFormForPickup(existingSchedule.getUserId(), existingSchedule.getPetCode());
             } else {
                 adoptFormService.denyFormOfUser(existingSchedule.getUserId(), existingSchedule.getPetCode());
+                Pets pet = petsService.findByPetCode(existingSchedule.getPetCode());
+                pet.setStatus("IN_HOUSE");
+                petsService.save(pet);
             }
 
             existingSchedule.setStatus(decision);
@@ -128,6 +135,9 @@ public class ScheduleService {
             if (decision.equalsIgnoreCase("PASSED")) {
                 adoptFormService.approveForm(existingSchedule.getUserId(), existingSchedule.getPetCode());
             } else {
+                Pets pet = petsService.findByPetCode(existingSchedule.getPetCode());
+                pet.setStatus("IN_HOUSE");
+                petsService.save(pet);
                 adoptFormService.denyFormOfUser(existingSchedule.getUserId(), existingSchedule.getPetCode());
             }
 

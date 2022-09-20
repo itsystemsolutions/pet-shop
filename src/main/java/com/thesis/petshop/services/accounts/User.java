@@ -44,45 +44,22 @@ public class User {
     @Column(name = "qualification_answers")
     private String qualificationAnswers;
 
-    @Column(name = "qualification_form_score")
-    private Integer qualificationFormScore;
+    @Column(name = "qualification_passed")
+    private Integer qualificationPassed;
 
     @Column(name = "is_user_valid")
     private Boolean isUserValid;
 
+    @Column(name = "email_otp")
+    private String emailOTP;
+
+    @Column(name = "valid_id")
+    private String validId;
+
+    @Column(name = "is_email_valid")
+    private Boolean isEmailValid;
+
     public User() { }
-
-    public String getAge() {
-        return age;
-    }
-
-    public void setAge(String age) {
-        this.age = age;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getOccupation() {
-        return occupation;
-    }
-
-    public void setOccupation(String occupation) {
-        this.occupation = occupation;
-    }
-
-    public String getSocial() {
-        return social;
-    }
-
-    public void setSocial(String social) {
-        this.social = social;
-    }
 
     public Long getId() {
         return id;
@@ -140,6 +117,38 @@ public class User {
         this.type = type;
     }
 
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getOccupation() {
+        return occupation;
+    }
+
+    public void setOccupation(String occupation) {
+        this.occupation = occupation;
+    }
+
+    public String getSocial() {
+        return social;
+    }
+
+    public void setSocial(String social) {
+        this.social = social;
+    }
+
     public String getQualificationAnswers() {
         return qualificationAnswers;
     }
@@ -148,12 +157,12 @@ public class User {
         this.qualificationAnswers = qualificationAnswers;
     }
 
-    public Integer getQualificationFormScore() {
-        return qualificationFormScore;
+    public Integer getQualificationPassed() {
+        return qualificationPassed;
     }
 
-    public void setQualificationFormScore(Integer qualificationFormScore) {
-        this.qualificationFormScore = qualificationFormScore;
+    public void setQualificationPassed(Integer qualificationPassed) {
+        this.qualificationPassed = qualificationPassed;
     }
 
     public Boolean getUserValid() {
@@ -162,5 +171,29 @@ public class User {
 
     public void setUserValid(Boolean userValid) {
         isUserValid = userValid;
+    }
+
+    public String getEmailOTP() {
+        return emailOTP;
+    }
+
+    public void setEmailOTP(String emailOTP) {
+        this.emailOTP = emailOTP;
+    }
+
+    public String getValidId() {
+        return validId;
+    }
+
+    public void setValidId(String validId) {
+        this.validId = validId;
+    }
+
+    public Boolean getEmailValid() {
+        return isEmailValid;
+    }
+
+    public void setEmailValid(Boolean emailValid) {
+        isEmailValid = emailValid;
     }
 }

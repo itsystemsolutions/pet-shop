@@ -6,6 +6,7 @@ import com.thesis.petshop.services.accounts.AccountsService;
 import com.thesis.petshop.services.adopt_form.answer.FormAnswer;
 import com.thesis.petshop.services.adopt_form.answer.FormAnswerService;
 import com.thesis.petshop.services.exceptions.ExistingException;
+import com.thesis.petshop.services.pets.Pets;
 import com.thesis.petshop.services.pets.PetsService;
 import com.thesis.petshop.services.utils.ImageUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +58,10 @@ public class AdoptFormService {
         adoptForm.setPetType( "IN_HOUSE" );
 
         repository.save(adoptForm);
+
+        Pets pet = petsService.findByPetCode(adoptFormDTO.getPetCode());
+        pet.setStatus("IN_PROCESS");
+        petsService.save(pet);
         return formScore;
     }
 

@@ -2,6 +2,7 @@ package com.thesis.petshop.services.accounts;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thesis.petshop.services.accounts.qualification.QualificationForm;
 import com.thesis.petshop.services.adopt_form.answer.FormAnswer;
 import com.thesis.petshop.services.adopt_form.answer.FormAnswerService;
 import com.thesis.petshop.services.email.JavaMailSenderImpl;
@@ -12,8 +13,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static java.util.Objects.nonNull;
 
 @Service
 public class AccountsService {
@@ -42,16 +46,16 @@ public class AccountsService {
         if (optionalUser.isPresent()) {
             return Response.failed("existing username " + user.getUsername());
         }
-
-        user.setUserValid(true);
         repository.save(user);
+
+        sendVerificationEmail(user.getEmail());
         return Response.ok();
     }
 
     public long login(String username, String password) {
         Optional<User> user = repository.findByUsername(username);
 
-        if (user.isPresent() && Boolean.TRUE.equals(!user.get().getUserValid())) {
+        if (user.isPresent() && nonNull(user.get().getUserValid()) && Boolean.TRUE.equals(!user.get().getUserValid())) {
             return 0;
         }
 
@@ -80,6 +84,24 @@ public class AccountsService {
         return Response.failed(String.format("Email %s is not existing to our system", email));
     }
 
+    public Response sendVerificationEmail(String email) {
+        Optional<User> userWithEmail = repository.findByEmail(email);
+
+        if (userWithEmail.isPresent()) {
+            User existingUser = userWithEmail.get();
+
+            String randomPasscode = randomService.randomCode();
+
+            existingUser.setEmailOTP(randomPasscode);
+            repository.save(existingUser);
+
+            javaMailSender.sendEmailOTP(email, randomPasscode);
+            return Response.ok();
+        }
+
+        return Response.failed(String.format("Email %s is not existing to our system", email));
+    }
+
     public List<UserDTO> getUsersByType(String type) {
         List<User> users = repository.findAllByType(type);
 
@@ -96,8 +118,9 @@ public class AccountsService {
             userDTO.setAddress(user.getAddress());
             userDTO.setOccupation(user.getOccupation());
             userDTO.setSocial(user.getSocial());
-            userDTO.setQualificationAnswers(parseToFormAnswer(user.getQualificationAnswers()));
-            userDTO.setQualificationFormScore(user.getQualificationFormScore());
+            userDTO.setUserValid(user.getUserValid());
+            userDTO.setQualificationAnswers( parseToFormAnswer(user.getQualificationAnswers()) );
+            userDTO.setQualificationFormScore(user.getQualificationPassed());
 
             return userDTO;
         }).collect(Collectors.toList());
@@ -122,7 +145,7 @@ public class AccountsService {
 
         int formScore = formAnswerService.analyzeAnswerScore(formAnswer);
 
-        user.setQualificationFormScore(formScore);
+        user.setQualificationPassed(formScore);
         user.setQualificationAnswers( parseObject(formAnswer) );
         user.setUserValid(formScore >= 12);
 
@@ -139,9 +162,13 @@ public class AccountsService {
         return null;
     }
 
-    private FormAnswer parseToFormAnswer (String answer) {
+    private QualificationForm parseToFormAnswer (String answer) {
+        if (answer == null || answer == "") {
+            return null;
+        }
+
         try {
-            return objectMapper.readValue(answer, FormAnswer.class);
+            return objectMapper.readValue(answer, QualificationForm.class);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -169,4 +196,36 @@ public class AccountsService {
         return leave;
     }
 
+    public Response verificationEmail(String email, String otp) {
+        Optional<User> user = repository.findByEmail(email);
+
+        if (user.isPresent()) {
+            if (!user.get().getEmailOTP().equalsIgnoreCase(otp)) {
+                return Response.failed("OTP is wrong");
+            }
+
+            user.get().setEmailValid(true);
+            repository.save(user.get());
+            return Response.ok();
+        }
+        return Response.failed(String.format("Email %s is not existing to our system", email));
+    }
+
+    public Response addQualificationForm(Long id, QualificationForm answer) {
+        Optional<User> user = repository.findById(id);
+        user.ifPresent(userData -> {
+            userData.setQualificationAnswers(parseObject(answer));
+            repository.save(userData);
+        });
+        return Response.ok();
+    }
+
+    public Response updateUserToValid(Long id, String decision) {
+        Optional<User> user = repository.findById(id);
+        user.ifPresent(userData -> {
+            userData.setUserValid(Objects.equals(decision, "APPROVE"));
+            repository.save(userData);
+        });
+        return Response.ok();
+    }
 }

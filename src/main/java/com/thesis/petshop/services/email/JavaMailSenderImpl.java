@@ -26,4 +26,14 @@ public class JavaMailSenderImpl {
         javaMailSender.send(msg);
     }
 
+    public void sendEmailOTP(String email, String code) {
+        SimpleMailMessage msg = new SimpleMailMessage();
+        msg.setTo(email);
+
+        msg.setSubject("PET SHOP EMAIL VERIFICATION");
+        msg.setText("Hello, \nYour email OTP is " + code + " please copy and paste code on the pet shop page.");
+
+        javaMailSender.send(msg);
+    }
+
 }

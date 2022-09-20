@@ -1,5 +1,6 @@
 package com.thesis.petshop.services.accounts;
 
+import com.thesis.petshop.services.accounts.qualification.QualificationForm;
 import com.thesis.petshop.services.adopt_form.answer.FormAnswer;
 
 import javax.persistence.Column;
@@ -22,7 +23,7 @@ public class UserDTO {
     private String occupation;
     private String social;
 
-    private FormAnswer qualificationAnswers;
+    private QualificationForm qualificationAnswers;
     private Integer qualificationFormScore;
 
     private Boolean isUserValid;
@@ -110,11 +111,11 @@ public class UserDTO {
         this.type = type;
     }
 
-    public FormAnswer getQualificationAnswers() {
+    public QualificationForm getQualificationAnswers() {
         return qualificationAnswers;
     }
 
-    public void setQualificationAnswers(FormAnswer qualificationAnswers) {
+    public void setQualificationAnswers(QualificationForm qualificationAnswers) {
         this.qualificationAnswers = qualificationAnswers;
     }
 
