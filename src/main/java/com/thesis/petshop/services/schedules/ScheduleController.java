@@ -52,8 +52,11 @@ public class ScheduleController {
     }
 
     @PutMapping("/{id}")
-    public void update(@PathVariable Long id, @RequestParam String decision){
-        service.updateAppointment(id, decision);
+    public void update(@PathVariable Long id, @RequestParam String decision,
+                       @RequestBody(required = false) Checklist checklist,
+                       @RequestParam(required = false) String failedReason
+    ){
+        service.updateAppointment(id, decision, checklist, failedReason);
     }
 
     @PutMapping("/pick-up/{id}")

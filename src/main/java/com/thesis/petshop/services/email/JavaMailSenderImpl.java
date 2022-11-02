@@ -21,7 +21,20 @@ public class JavaMailSenderImpl {
         msg.setTo(email);
 
         msg.setSubject("PET SHOP FORGOT PASSWORD CODE");
-        msg.setText("Hello AdoptForm, \nYour new pass is " + code + " please goto our system then type the code.");
+        msg.setText("Hello "+email+", \nYour new pass is " + code + " please goto our system then type the code.");
+
+        javaMailSender.send(msg);
+    }
+
+    public void sendInterviewNotification(String email, String name, String code, String outcome) {
+        SimpleMailMessage msg = new SimpleMailMessage();
+        msg.setTo(email);
+
+        msg.setSubject("PET SHOP - " + code);
+        msg.setText("Hello "+ name +", \nYour pet with code " + code + " has " + outcome + " the assessment.\n" +
+                "Please wait for the administrator to send you a schedule for picking up your pet.\n\n" +
+                "NOTE: Prior to viewing your schedule, YOU MUST PAY/UPLOAD PROOF OF PAYMENT.\n\n" +
+                "Thankyou.");
 
         javaMailSender.send(msg);
     }

@@ -1,7 +1,11 @@
 package com.thesis.petshop.services.schedules;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thesis.petshop.services.accounts.AccountsService;
+import com.thesis.petshop.services.accounts.User;
 import com.thesis.petshop.services.adopt_form.AdoptFormService;
+import com.thesis.petshop.services.email.JavaMailSenderImpl;
 import com.thesis.petshop.services.pets.Pets;
 import com.thesis.petshop.services.pets.PetsService;
 import com.thesis.petshop.services.utils.ImageUploadService;
@@ -25,28 +29,32 @@ public class ScheduleService {
     private final AccountsService accountsService;
     private final AdoptFormService adoptFormService;
     private final PetsService petsService;
+    private final ObjectMapper objectMapper;
+    private final JavaMailSenderImpl mailService;
 
     public ScheduleService(ImageUploadService imageUploadService, ScheduleRepository repository,
                            AccountsService accountsService, AdoptFormService adoptFormService,
-                           PetsService petsService) {
+                           PetsService petsService, ObjectMapper objectMapper, JavaMailSenderImpl mailService) {
         this.imageUploadService = imageUploadService;
         this.repository = repository;
         this.accountsService = accountsService;
         this.adoptFormService = adoptFormService;
         this.petsService = petsService;
+        this.objectMapper = objectMapper;
+        this.mailService = mailService;
     }
 
     public void saveInterview(Schedule schedule) {
-        schedule.setType("INTERVIEW");
-        schedule.setHasProofPayment(false);
-        schedule.setStatus(WAITING);
-        schedule.setPetType( adoptFormService.getPetType(schedule.getPetCode()) );
+        schedule.setType( "INTERVIEW" );
+        schedule.setProofPaymentCount(0);
+        schedule.setStatus( WAITING );
+        schedule.setPetType( petsService.getPetType(schedule.getPetCode()) );
         repository.save(schedule);
     }
 
     public void savePickUp(Schedule schedule) {
         schedule.setType("PICKUP");
-        schedule.setHasProofPayment(false);
+        schedule.setProofPaymentCount(0);
         schedule.setStatus(WAITING);
         repository.save(schedule);
     }
@@ -95,9 +103,11 @@ public class ScheduleService {
         dto.setTime(convertTimeTo12HrFormat(entry.getTime()));
         dto.setMessage(entry.getMessage());
         dto.setZoomLink(entry.getZoomLink());
-        dto.setHasProofPayment(entry.getHasProofPayment() != null && entry.getHasProofPayment());
+        dto.setProofPaymentCount( entry.getProofPaymentCount());
         dto.setStatus(entry.getStatus());
         dto.setPetType(entry.getPetType());
+        dto.setChecklist(parseToCheckListAnswer(entry.getInterviewChecklist()));
+        dto.setFailedReason(entry.getFailedReason());
 
         return dto;
     }
@@ -106,24 +116,58 @@ public class ScheduleService {
         return LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm")).format(DateTimeFormatter.ofPattern("hh:mm a"));
     }
 
-    public void updateAppointment(Long id, String decision) {
+    public void updateAppointment(Long id, String decision, Checklist checklist, String failedReason) {
         Optional<Schedule> schedule = repository.findById(id);
 
         if (schedule.isPresent()) {
             Schedule existingSchedule = schedule.get();
 
+            User user = accountsService.getUserById(existingSchedule.getUserId());
+
             if (decision.equalsIgnoreCase("PASSED")) {
-                adoptFormService.updateFormForPickup(existingSchedule.getUserId(), existingSchedule.getPetCode());
+                if (checklist != null) {
+                    existingSchedule.setInterviewChecklist( parseObject(checklist) );
+                }
+
+                mailService.sendInterviewNotification(user.getEmail(), user.getName(), existingSchedule.getPetCode(),"PASSED");
+
+                if (!existingSchedule.getPetType().equals("MISSING")) {
+                    adoptFormService.updateFormForPickup(existingSchedule.getUserId(), existingSchedule.getPetCode());
+                }
             } else {
                 adoptFormService.denyFormOfUser(existingSchedule.getUserId(), existingSchedule.getPetCode());
                 Pets pet = petsService.findByPetCode(existingSchedule.getPetCode());
                 pet.setStatus("IN_HOUSE");
                 petsService.save(pet);
+
+                mailService.sendInterviewNotification(user.getEmail(), user.getName(), existingSchedule.getPetCode(),"FAILED");
+
+                existingSchedule.setFailedReason(failedReason);
             }
 
             existingSchedule.setStatus(decision);
             repository.save(existingSchedule);
         }
+    }
+
+    private Checklist parseToCheckListAnswer(String answer) {
+        try {
+            if (answer == null) return null;
+
+            return objectMapper.readValue(answer, Checklist.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private String parseObject(Object object) {
+        try {
+            return objectMapper.writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public void updatePickUpAppointment(Long id, String decision) {
@@ -148,9 +192,10 @@ public class ScheduleService {
 
     public void uploadImage(Long id, MultipartFile file) {
         repository.findById(id).ifPresent(schedule -> {
-            imageUploadService.fileUpload(file, "payment\\" + id);
+            imageUploadService.fileUpload(file, "payment\\" + id + "-" +
+                    (schedule.getProofPaymentCount() + 1));
 
-            schedule.setHasProofPayment( true );
+            schedule.setProofPaymentCount( schedule.getProofPaymentCount() + 1 );
             repository.save(schedule);
         });
     }

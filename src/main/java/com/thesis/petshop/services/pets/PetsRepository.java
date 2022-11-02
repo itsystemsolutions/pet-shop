@@ -11,7 +11,7 @@ public interface PetsRepository extends JpaRepository<Pets, Long> {
 
     List<Pets> findAllByStatus(String status);
 
-    List<Pets> findAllByStatusAndApprovalStatus(String status, String approvalStatus);
+    List<Pets> findAllByPetTypeAndApprovalStatus(String status, String approvalStatus);
 
-    List<Pets> findAllByOwnerIdAndStatus(Long userId, String name);
+    List<Pets> findAllByOwnerIdAndPetType(Long userId, String petType);
 }

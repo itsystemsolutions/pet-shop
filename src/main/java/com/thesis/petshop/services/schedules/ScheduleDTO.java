@@ -12,16 +12,34 @@ public class ScheduleDTO {
     private String petType;
     private String zoomLink;
     private String status;
-    private Boolean hasProofPayment;
+    private Integer proofPaymentCount;
+    private Checklist checklist;
+    private String failedReason;
+
+    public String getFailedReason() {
+        return failedReason;
+    }
+
+    public void setFailedReason(String failedReason) {
+        this.failedReason = failedReason;
+    }
+
+    public Checklist getChecklist() {
+        return checklist;
+    }
+
+    public void setChecklist(Checklist checklist) {
+        this.checklist = checklist;
+    }
 
     public ScheduleDTO() { }
 
-    public Boolean getHasProofPayment() {
-        return hasProofPayment;
+    public Integer getProofPaymentCount() {
+        return proofPaymentCount;
     }
 
-    public void setHasProofPayment(Boolean hasProofPayment) {
-        this.hasProofPayment = hasProofPayment;
+    public void setProofPaymentCount(Integer proofPaymentCount) {
+        this.proofPaymentCount = proofPaymentCount;
     }
 
     public Long getId() {

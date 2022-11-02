@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/pets")
@@ -33,6 +32,11 @@ public class PetsController {
     @PutMapping("/upload/image")
     public void uploadImage(@RequestParam String code, @RequestParam("file") MultipartFile file){
         service.uploadImage(code, file);
+    }
+
+    @PutMapping("/upload/vaccine/image")
+    public void uploadVaccineImage(@RequestParam String code, @RequestParam("file") MultipartFile file){
+        service.uploadVaccine(code, file);
     }
 
     @GetMapping("/missing")

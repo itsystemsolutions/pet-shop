@@ -47,11 +47,32 @@ public class Schedule {
     @Column(name = "status")
     private String status;
 
-    @Column(name = "has_proof_payment")
-    private Boolean hasProofPayment;
+    @Column(name = "proof_payment_count")
+    private Integer proofPaymentCount;
+
+    @Column(name = "interview_checklist")
+    private String interviewChecklist;
+
+    @Column(name = "failed_reason")
+    private String failedReason;
 
     public Schedule() { }
 
+    public String getFailedReason() {
+        return failedReason;
+    }
+
+    public void setFailedReason(String failedReason) {
+        this.failedReason = failedReason;
+    }
+
+    public String getInterviewChecklist() {
+        return interviewChecklist;
+    }
+
+    public void setInterviewChecklist(String interviewChecklist) {
+        this.interviewChecklist = interviewChecklist;
+    }
 
     public String getType() {
         return type;
@@ -133,12 +154,12 @@ public class Schedule {
         this.status = status;
     }
 
-    public Boolean getHasProofPayment() {
-        return hasProofPayment;
+    public Integer getProofPaymentCount() {
+        return proofPaymentCount;
     }
 
-    public void setHasProofPayment(Boolean hasProofPayment) {
-        this.hasProofPayment = hasProofPayment;
+    public void setProofPaymentCount(Integer proofPaymentCount) {
+        this.proofPaymentCount = proofPaymentCount;
     }
 
     public String getPetType() {

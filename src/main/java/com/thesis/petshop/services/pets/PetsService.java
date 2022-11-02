@@ -71,6 +71,10 @@ public class PetsService {
         repository.findByPetCode(code).ifPresent(pet -> imageUploadService.fileUpload(file, "pets\\" + code));
     }
 
+    public void uploadVaccine(String code, MultipartFile file) {
+        repository.findByPetCode(code).ifPresent(pet -> imageUploadService.fileUpload(file, "vaccine\\" + code));
+    }
+
     public String getPetNameByPetCode(String petCode) {
         return repository.findByPetCode(petCode).get().getName();
     }
@@ -95,7 +99,7 @@ public class PetsService {
 
     public List<PetsDTO> getMissingPets(Long userId) {
         if (Objects.nonNull(userId)) {
-            return repository.findAllByOwnerIdAndStatus(userId, Status.MISSING.name())
+            return repository.findAllByOwnerIdAndPetType(userId, Status.MISSING.name())
                     .stream()
                     .map(this::toDTO)
                     .collect(Collectors.toList());
@@ -123,6 +127,8 @@ public class PetsService {
         dto.setLastSeen(pets.getLastSeen());
         dto.setApprovalStatus(pets.getApprovalStatus());
         dto.setUser( accountsService.getUserById(pets.getOwnerId()) );
+        dto.setType( pets.getType() );
+        dto.setPrice( pets.getPrice() );
 
         return dto;
     }
@@ -140,7 +146,7 @@ public class PetsService {
     }
 
     public List<PetsDTO> getMissingPetsAndApproved() {
-        return repository.findAllByStatusAndApprovalStatus(Status.MISSING.name(), "APPROVED")
+        return repository.findAllByPetTypeAndApprovalStatus(Status.MISSING.name(), "APPROVED")
                 .stream()
                 .map(this::toDTO)
                 .collect(Collectors.toList());
@@ -149,4 +155,9 @@ public class PetsService {
     public void save(Pets pet) {
         repository.save(pet);
     }
+
+    public String getPetType(String petCode) {
+        return repository.findByPetCode(petCode).get().getPetType();
+    }
+
 }

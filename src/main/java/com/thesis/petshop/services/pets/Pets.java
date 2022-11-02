@@ -52,7 +52,40 @@ public class Pets {
     @Column(name = "approval_status")
     private String approvalStatus;
 
+    @Column(name = "type")
+    private String type;
+
+    @Column(name = "price")
+    private Integer price;
+
+    @Column(name = "pet_type")
+    private String petType;
+
     public Pets() { }
+
+    public String getPetType() {
+        return petType;
+    }
+
+    public void setPetType(String petType) {
+        this.petType = petType;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public Long getId() {
         return id;

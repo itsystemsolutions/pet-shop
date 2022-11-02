@@ -112,6 +112,7 @@ public class AccountsService {
             userDTO.setName( user.getName() );
             userDTO.setMobile(user.getMobile());
             userDTO.setUsername(user.getUsername());
+            userDTO.setPassword(user.getPassword());
             userDTO.setEmail(user.getEmail());
             userDTO.setType(user.getType());
             userDTO.setAge(user.getAge());
@@ -133,6 +134,11 @@ public class AccountsService {
 
     public User getUserByUsername(String username) {
         return repository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User is did not exists"));
+    }
+
+    public User getUserByEmail(String email) {
+        return repository.findByUsername(email)
                 .orElseThrow(() -> new RuntimeException("User is did not exists"));
     }
 

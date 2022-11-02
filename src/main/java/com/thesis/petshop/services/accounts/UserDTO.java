@@ -16,6 +16,7 @@ public class UserDTO {
     private String name;
     private String mobile;
     private String username;
+    private String password;
     private String email;
     private String type;
     private String age;
@@ -133,5 +134,13 @@ public class UserDTO {
 
     public void setUserValid(Boolean userValid) {
         isUserValid = userValid;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

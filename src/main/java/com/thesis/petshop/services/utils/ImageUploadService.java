@@ -14,9 +14,9 @@ import java.io.FileOutputStream;
 @Service
 public class ImageUploadService {
 
-    public String fileUpload(MultipartFile file, String imagePath) {
+    public String fileUpload(MultipartFile file, String imageName) {
         try {
-            File path = new File("C:\\PET_SHOP\\images\\" + imagePath + ".jpg");
+            File path = new File("C:\\PET_SHOP\\images\\" + imageName + ".jpg");
             path.createNewFile();
             FileOutputStream output = new FileOutputStream(path);
             output.write(file.getBytes());

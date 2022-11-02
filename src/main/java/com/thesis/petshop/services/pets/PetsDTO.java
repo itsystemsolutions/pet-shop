@@ -17,8 +17,26 @@ public class PetsDTO {
     private String lastSeen;
     private String approvalStatus;
     private User user;
+    private String type;
+    private Integer price;
 
     public PetsDTO() { }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
 
     public Long getId() {
         return id;

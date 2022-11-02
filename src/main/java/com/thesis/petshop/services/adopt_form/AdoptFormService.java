@@ -175,9 +175,11 @@ public class AdoptFormService {
     }
 
     public void approveForm(Long userId, String petCode) {
-        AdoptForm adoptForm = repository.findByPetCodeAndUserId(petCode, userId);
-        adoptForm.setStatus("APPROVED");
-        repository.save(adoptForm);
+        Optional.ofNullable(repository.findByPetCodeAndUserId(petCode, userId))
+                .ifPresent(entry -> {
+                    entry.setStatus("APPROVED");
+                    repository.save(entry);
+                });
 
         petsService.updatePetForClaimed(petCode);
     }
@@ -197,4 +199,5 @@ public class AdoptFormService {
     public String getPetType(String petCode) {
         return repository.findByPetCode(petCode).getPetType();
     }
+
 }
